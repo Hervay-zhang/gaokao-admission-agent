@@ -1,0 +1,67 @@
+# ============================================================
+#  忽略规则：避免敏感配置与大文件入库
+#  红线：.env 绝不入库
+# ============================================================
+
+# ---- 环境与密钥 ----
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+backend/.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# ---- Node / 前端构建产物 ----
+node_modules/
+frontend/node_modules/
+dist/
+build/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+
+# ---- 数据（原始件一律不入库；清洗产物保留 .gitkeep）----
+data/raw/*
+!data/raw/.gitkeep
+data/cleaned/*
+!data/cleaned/.gitkeep
+data/.cache/
+*.bak
+*.bak2
+*.zip
+*.7z
+*.rar
+
+# ---- IDE / OS ----
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ---- 日志与临时 ----
+*.log
+logs/
+tmp/
+temp/
+
+# ---- WorkBuddy 会话数据 ----
+.workbuddy/
+frontend/_nm_to_delete/
+.dumate/
+
+!data/raw/sources.json

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="基于近三年真实投档数据的升学志愿填报助手：输入分数位次，给出冲稳保三档方案 + 政策问答">
+  <meta name="theme-color" content="#1e3a5f">
+  <title>高考志愿助手 · 家庭升学与人生路径规划</title>
+
+  <!-- 站点图标（与顶栏「志」字印章同构：墨蓝圆角方 + 白色衬线字） -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <!-- 设计令牌 + 全局样式 -->
+  <link rel="stylesheet" href="./css/tokens.css">
+  <link rel="stylesheet" href="./css/app.css">
+
+  <!-- 衬线标题字体（Noto Serif SC）。
+       国内网络下 Google Fonts 常不可达，若同步加载会阻塞首屏渲染直到超时，
+       因此改为异步加载（media=print → onload 切回 all），取不到时自动退回系统宋体。 -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap"
+    rel="stylesheet"
+    media="print"
+    onload="this.media='all'"
+  >
+
+  <!--
+    API 基址自适应（部署用）：
+      本地开发 / Vite dev 端口（127.0.0.1、localhost、5173/5174/8080）→ http://<host>:8000
+      公网部署（8081 等生产端口，IP 或域名）→ ""（同域），由 nginx 把 /api 反代到后端容器
+    仍可用 window.__API_BASE__ 强制覆盖（优先级最高）。
+  -->
+  <script>
+    window.__API_BASE__ =
+      window.__API_BASE__ ||
+      (function () {
+        var h = location.hostname;
+        var devPorts = ["5173", "5174", "5175", "8080", "5599"];
+        if (h === "127.0.0.1" || h === "localhost" || devPorts.indexOf(location.port) >= 0) {
+          return "http://" + h + ":8000";
+        }
+        return ""; // 生产：同域，由 nginx 反代 /api
+      })();
+  </script>
+</head>
+<body>
+  <!-- 等高线纹理背景层（由 ContourBg 注入内联 SVG） -->
+  <div id="contour-bg" class="contour-bg" aria-hidden="true"></div>
+
+  <!-- 顶部导航容器（NavBar 渲染） -->
+  <header id="navbar-root"></header>
+
+  <!-- 页面主内容挂载点（router 渲染） -->
+  <main id="app" class="page-main"></main>
+
+  <!-- 「✦ AI 助手」悬浮入口容器（FloatingAI 渲染） -->
+  <div id="floating-ai-root"></div>
+
+  <!-- 页面底部：快捷导航区 + 免责声明条（常驻渲染） -->
+  <footer id="footer-root" class="site-footer">
+    <!-- 快捷链接区（QuickLinks 渲染，默认含阳光高考等官方平台） -->
+    <div id="quick-links-root"></div>
+    <!-- 免责声明条容器（DisclaimerBar 渲染） -->
+    <div id="disclaimer-root"></div>
+  </footer>
+
+  <!-- ES Module 入口（无打包器，浏览器原生加载） -->
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

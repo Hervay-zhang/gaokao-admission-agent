@@ -1,0 +1,94 @@
+# ============================================================
+#  一键拉起：api + mysql + redis
+#  用法：
+#    docker compose up -d mysql redis      # 仅基础设施（本机开发推荐）
+#    docker compose up -d --wait           # 全量（含 api）
+#  端口规划（本机避坑，详见 docs/升学志愿助手-项目目录树.md §4）：
+#    MySQL  本机已装 MySQL80 占用 3306 → 若走容器用 3307 映射
+#    Redis  容器映射 6380（避开 6379 潜在冲突）
+#    API    8000
+# ============================================================
+name: gaokao   # 显式项目名：目录名含非 ASCII 时 compose 归一化会得到空名
+
+services:
+  # ---------------- MySQL 8 ----------------
+  mysql:
+    image: mysql:8.0
+    container_name: gaokao_mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+08:00
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-gaokao}
+    ports:
+      # 本机已有 MySQL80 占用 3306，这里映射到 3307 避免冲突
+      - "3307:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+  # ---------------- Redis 7 ----------------
+  redis:
+    image: redis:7
+    container_name: gaokao_redis
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # ---------------- FastAPI ----------------
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gaokao_api
+    env_file:
+      - .env
+    environment:
+      # 容器内互访用服务名（覆盖 .env 里的 127.0.0.1）
+      DATABASE_URL: mysql+pymysql://root:${MYSQL_ROOT_PASSWORD:-123456}@mysql:3306/${MYSQL_DATABASE:-gaokao}?charset=utf8mb4
+      REDIS_URL: redis://redis:6379/0
+      # 首次灌数据置 1（需下方 data-cleaned 卷里有 CSV）；日常重启保持 0 不重复导入
+      IMPORT_DATA: ${IMPORT_DATA:-0}
+    ports:
+      - "8000:8000"
+    volumes:
+      # 可选数据导入：挂载清洗产物 CSV（只读）；PROJECT_ROOT=/ → /data/cleaned
+      - ./data/cleaned:/data/cleaned:ro
+      # 案例中心：索引 + Markdown 正文（只读）
+      - ./data/cases:/data/cases:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---------------- 前端静态站点（nginx）----------------
+  web:
+    image: nginx:1.27-alpine
+    container_name: gaokao_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  mysqldata:

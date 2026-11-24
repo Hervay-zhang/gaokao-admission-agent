@@ -1,0 +1,83 @@
+[project]
+name = "gaokao-backend"
+version = "2.0.0"
+description = "高考升学志愿填报 AI 助手后端（FastAPI + MySQL + Redis）"
+readme = "README.md"
+requires-python = "==3.12.*"
+dependencies = [
+    # ---- Web 框架 ----
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.12",
+    # ---- 数据库 ----
+    "sqlalchemy>=2.0.36",
+    "pymysql>=1.1.1",
+    "cryptography>=43.0.0",   # pymysql 连接 MySQL 8 caching_sha2_password 依赖
+    "alembic>=1.14.0",
+    # ---- 配置与校验 ----
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.7.0",
+    "python-dotenv>=1.0.1",
+    # ---- 缓存 ----
+    "redis>=5.2.0",
+    # ---- HTTP 客户端（LLM 调用）----
+    "httpx>=0.28.0",
+    # ---- 图形验证码（T33 防批量注册）：渲染 PNG，内置字体无需额外字体文件 ----
+    "pillow>=10.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.8.0",
+]
+
+# ---- 可选依赖：RAG 中文分词（T13 接入）----
+# 单独成组：jieba 在部分 Windows 环境 sdist 构建较慢/易受 setuptools 影响，
+# 不放进主依赖以免拖累 T01 全链路。T13 用 `uv sync --extra rag` 安装。
+[project.optional-dependencies]
+rag = [
+    "jieba>=0.42.1",
+]
+# 数据管线（T02/T03 采集清洗用；在线运行时不依赖）
+data = [
+    "pdfplumber>=0.11.4",
+    # T12 政策语料采集：HTML 解析（比正则稳，官方站点结构变动时更易维护）
+    "beautifulsoup4>=4.12.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+# ==================== 代码规范 ====================
+# PEP8 / ruff，行长 120（与团队约定一致）
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+exclude = [".venv", "migrations/versions"]
+
+[tool.ruff.lint]
+# E/W: pycodestyle  F: pyflakes  I: isort  N: pep8-naming  UP: pyupgrade  B: bugbear
+select = ["E", "W", "F", "I", "N", "UP", "B"]
+ignore = [
+    "E501",  # 行长由 line-length 控制，E501 与 formatter 冲突
+    "B008",  # FastAPI Depends() 默认参数惯用法
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]  # 测试里允许 assert False 之类
+
+# ==================== 测试 ====================
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+    "smoke: 冒烟测试（T01 J1-J8）",
+    "destructive: 会重建数据库表的破坏性测试（默认跳过，需显式开启）",
+]

@@ -1,0 +1,87 @@
+/* ============================================================
+   设计令牌（Design Tokens）
+   视觉语言：见径「测量地形图美学」升级版
+   - 纸感底 + 等高线纹理
+   - 墨蓝 India Ink 主色 + 朱砂红强调
+   - 特大号衬线标题（Noto Serif SC）
+   ============================================================ */
+
+:root {
+  /* ---------- 颜色 ---------- */
+  --color-paper: #faf7f2;          /* 纸感底色 */
+  --color-paper-deep: #f3ede4;     /* 卡片/分区底 */
+  --color-ink: #1e3a5f;            /* 墨蓝：导航/标题/主按钮 */
+  --color-ink-deep: #16293f;       /* 墨蓝加深 */
+  --color-ink-soft: #2f567f;       /* 墨蓝浅 */
+  --color-vermilion: #c0392b;      /* 朱砂红：强调/冲档警示 */
+  --color-vermilion-soft: #d9604f;
+  --color-card: #ffffff;           /* 卡片白 */
+
+  /* 三档色标（冲/稳/保） */
+  --color-tier-chong: #c0392b;     /* 冲 */
+  --color-tier-wen: #b98a2f;       /* 稳 */
+  --color-tier-bao: #2e7d5b;       /* 保 */
+
+  /* 文本 */
+  --color-text: #2b2b2b;
+  --color-text-sub: #6b6b6b;
+  --color-text-light: #999999;
+  --color-border: #e4ddd2;
+  --color-border-soft: #efe9e0;
+
+  /* 状态 */
+  --color-success: #2e7d5b;
+  --color-warning: #b98a2f;
+  --color-danger: #c0392b;
+
+  /* ---------- 字体 ---------- */
+  /* 衬线：标题（Noto Serif SC / 思源宋体） */
+  --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+  /* 无衬线：正文 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  /* 字号 */
+  --fs-hero: clamp(2rem, 5vw, 3.5rem);   /* 40-56px 特大桥接兼容 */
+  --fs-h1: 2rem;
+  --fs-h2: 1.5rem;
+  --fs-h3: 1.25rem;
+  --fs-body: 1rem;                        /* ≥16px 可读性 */
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.75rem;
+
+  /* ---------- 间距 ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---------- 圆角 ---------- */
+  --radius-sm: 6px;
+  --radius: 12px;      /* 卡片标准圆角 */
+  --radius-lg: 18px;
+  --radius-pill: 999px; /* 胶囊按钮 */
+
+  /* ---------- 阴影 ---------- */
+  --shadow-sm: 0 1px 3px rgba(30, 58, 95, 0.06);
+  --shadow: 0 4px 16px rgba(30, 58, 95, 0.08);
+  --shadow-lg: 0 12px 32px rgba(30, 58, 95, 0.12);
+
+  /* ---------- 布局 ---------- */
+  --page-max: 1200px;   /* 版心（对齐见径宽版心） */
+  --nav-height: 64px;
+
+  /* ---------- 过渡 ---------- */
+  --transition: 0.2s ease;
+  --transition-slow: 0.35s ease;
+
+  /* ---------- 层级 ---------- */
+  --z-nav: 100;
+  --z-floating: 200;
+  --z-modal: 300;
+}

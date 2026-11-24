@@ -1,0 +1,17 @@
+{
+  "name": "gaokao-frontend",
+  "version": "1.0.0",
+  "description": "高考志愿助手前端（原生 HTML/CSS/JS + ES Modules）",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "check": "node scripts/check-js.mjs",
+    "test:visual": "node ../tests/frontend/visual-accessibility.test.mjs"
+  },
+  "devDependencies": {
+    "qrcode-generator": "^1.5.2",
+    "vite": "^6.0.0"
+  }
+}

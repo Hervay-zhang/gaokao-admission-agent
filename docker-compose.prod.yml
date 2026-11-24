@@ -1,0 +1,106 @@
+# ============================================================
+#  生产编排 · 阿里云 39.107.44.42
+#  与开发版 docker-compose.yml 的差异：
+#    1. 只对外暴露 8081（nginx 静态 + /api 反代），api 用 expose 不占宿主机端口
+#    2. MySQL 映射 3307（服务器已装宿主机 MySQL 占用 3306）
+#    3. Redis 不映射端口（仅容器内访问）
+#    4. MySQL 显式 --ngram_token_size=2（RAG 全文索引必需，迁移 0005 依赖）
+#    5. 前端只挂载 dist（Vite 构建产物），不挂源码目录
+#    6. api 用 Dockerfile.prod（pip 装 uv，绕开国内拉不动的 ghcr.io）
+#  用法：
+#    docker compose -f docker-compose.prod.yml up -d mysql redis   # 先基础设施
+#    docker compose -f docker-compose.prod.yml up -d --build api   # 首灌数据（IMPORT_DATA=1）
+#    docker compose -f docker-compose.prod.yml up -d               # 全量
+# ============================================================
+name: gaokao   # 必须显式：项目目录名含中文，归一化会得到空项目名
+
+services:
+  # ---------------- MySQL 8 ----------------
+  mysql:
+    image: mysql:8.0
+    container_name: gaokao_mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+08:00
+      - --ngram_token_size=2
+      # 2G 小内存服务器降配（占用从 ~450MB 降到 ~250MB）
+      - --innodb-buffer-pool-size=128M
+      - --performance-schema=OFF
+      - --innodb-flush-method=fsync
+    mem_limit: 640m
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-gaokao}
+    ports:
+      # 仅供服务器本机排查；业务容器通过 Docker 内网访问，不向公网暴露数据库。
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - mysqldata_prod:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+  # ---------------- Redis 7（可降级项，挂了业务仍能跑）----------------
+  redis:
+    image: redis:7
+    container_name: gaokao_redis
+    command: ["redis-server", "--maxmemory", "96mb", "--maxmemory-policy", "allkeys-lru"]
+    mem_limit: 128m
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # ---------------- FastAPI ----------------
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: gaokao_api
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: mysql+pymysql://root:${MYSQL_ROOT_PASSWORD}@mysql:3306/${MYSQL_DATABASE:-gaokao}?charset=utf8mb4
+      REDIS_URL: redis://redis:6379/0
+      # 首次灌数据置 1（需 data/cleaned 下有 CSV）；导入完成后改回 0
+      IMPORT_DATA: ${IMPORT_DATA:-0}
+    expose:
+      - "8000"
+    mem_limit: 768m     # RAG 切片构建峰值较高，不要设太低
+    volumes:
+      - ./data/cleaned:/data/cleaned:ro
+      - ./data/cases:/data/cases:ro
+      # 关键：config.py 的 ENV_FILE = BASE_DIR/".env"，容器内 BASE_DIR 解析为 "/"，
+      # 生产启动校验要求该文件存在（appuser 需可读 → 宿主 .env 权限 644）
+      - ./.env:/.env:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---------------- 前端静态站点（nginx）----------------
+  web:
+    image: nginx:1.27-alpine
+    container_name: gaokao_web
+    ports:
+      - "8081:80"
+    mem_limit: 96m
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./docker/nginx/prod.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  mysqldata_prod:

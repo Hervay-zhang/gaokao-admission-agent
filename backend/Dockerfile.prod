@@ -1,0 +1,67 @@
+# ============================================================
+#  生产镜像（国内服务器专用）：与 Dockerfile 的唯一区别是 uv 的获取方式
+#    开发版：COPY --from=ghcr.io/astral-sh/uv:latest（GitHub 容器仓库，国内常拉不动）
+#    生产版：pip install uv（走 PyPI / 清华源）
+#  其余（--extra rag 装 jieba、非 root、entrypoint 迁移+灌数）完全一致
+# ============================================================
+# 注意：此处**不能**用 @sha256 digest 锁定——按 digest 拉取不走 registry-mirror，
+# 国内服务器会直连 Docker Hub 超时（实测卡死 12 分钟）。用 tag 才能走镜像加速。
+FROM python:3.12.8-slim AS builder
+
+# PyPI 镜像：实测该服务器**只有腾讯云源可用**（清华源 403、官方源不通、阿里云超时）
+ARG PIP_INDEX_URL=https://mirrors.cloud.tencent.com/pypi/simple
+ENV PIP_INDEX_URL=${PIP_INDEX_URL} \
+    UV_DEFAULT_INDEX=${PIP_INDEX_URL}
+
+# 用 pip 装 uv（腾讯源优先，阿里云兜底）
+RUN pip install --no-cache-dir uv \
+    || pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple uv
+
+WORKDIR /app
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PYTHON_DOWNLOADS=never
+
+# 先只复制依赖清单，利用构建缓存
+# 注意：必须带 --extra rag（jieba），否则政策问答（RAG）全挂
+COPY pyproject.toml uv.lock* ./
+RUN uv sync --no-dev --no-install-project --extra rag
+
+# ---------------- runtime ----------------
+FROM python:3.12.8-slim AS runtime
+
+ENV TZ=Asia/Shanghai \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/app/.venv/bin:$PATH"
+
+# Debian 源换国内镜像：实测 deb.debian.org 在该服务器仅 11 kB/s（9MB 要 14 分钟），
+# 腾讯云镜像 600 KB/s。bookworm 用 deb822(.sources)，老版本用 sources.list，两种都兼容。
+RUN set -eux; \
+    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+      sed -i 's|http://deb.debian.org|https://mirrors.cloud.tencent.com|g' /etc/apt/sources.list.d/debian.sources; \
+    elif [ -f /etc/apt/sources.list ]; then \
+      sed -i 's|http://deb.debian.org|https://mirrors.cloud.tencent.com|g' /etc/apt/sources.list; \
+    fi; \
+    apt-get update \
+    && apt-get install -y --no-install-recommends tzdata curl \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -u 1000 appuser
+
+WORKDIR /app
+COPY --from=builder /app/.venv /app/.venv
+COPY --chown=appuser:appuser . /app
+
+RUN chmod +x /app/entrypoint.sh
+
+USER appuser
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=20s --retries=5 \
+    CMD curl -fsS http://127.0.0.1:8000/health || exit 1
+
+ENTRYPOINT ["/app/entrypoint.sh"]

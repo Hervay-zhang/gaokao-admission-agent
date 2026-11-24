@@ -1,0 +1,165 @@
+{
+  "province": "广东",
+  "sources": {
+    "2023/archive_pdf": {
+      "bytes": 32862728,
+      "file": "2023\\粤招办普 〔 2023 〕26号关于公布广东省2023年普通高考成绩各分数段数据的通知_3-87.pdf",
+      "kind": "archive_pdf",
+      "post_url": "https://eea.gd.gov.cn/zwgk_tjxx/content/post_4207233.html",
+      "sha256": "eb390cdc45dc69bbe49125bdd545572f02ad74cb9fa283959662301062884d9d",
+      "subject_type": null,
+      "url": "https://eea.gd.gov.cn/attachment/0/524/524378/4207233.pdf",
+      "year": 2023
+    },
+    "2024/zip": {
+      "bytes": 5134105,
+      "file": "2024\\关于公布广东省2024年普通高考成绩各分数段数据的通知.zip",
+      "kind": "zip",
+      "post_url": "https://eea.gd.gov.cn/zwgk_tjxx/content/post_4445715.html",
+      "sha256": "4e9d1af9e1e2c262396ecef93c9050d50391c29cf53df984d1e228aa4aed898e",
+      "subject_type": null,
+      "url": "https://eea.gd.gov.cn/attachment/0/552/552702/4445715.zip",
+      "year": 2024
+    },
+    "2024/历史": {
+      "bytes": 411069,
+      "file": "2024\\extracted\\1.广东省2024年高考普通类（历史）分数段统计表（含本、专科层次加分）.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/zwgk_tjxx/content/post_4445715.html",
+      "sha256": "c4759230c1028bb299a87f5459435aefce545bd7a95804c34ed3ccbd93a7d698",
+      "subject_type": "历史",
+      "url": "https://eea.gd.gov.cn/attachment/0/552/552702/4445715.zip#1.广东省2024年高考普通类（历史）分数段统计表（含本、专科层次加分）.pdf",
+      "year": 2024
+    },
+    "2024/物理": {
+      "bytes": 418672,
+      "file": "2024\\extracted\\2.广东省2024年高考普通类（物理）分数段统计表（含本、专科层次加分）.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/zwgk_tjxx/content/post_4445715.html",
+      "sha256": "e6e41249f643bfbf730118367e09715da0f3dddeb8a82a4d6a095a13c9f0926d",
+      "subject_type": "物理",
+      "url": "https://eea.gd.gov.cn/attachment/0/552/552702/4445715.zip#2.广东省2024年高考普通类（物理）分数段统计表（含本、专科层次加分）.pdf",
+      "year": 2024
+    },
+    "2025/zip": {
+      "bytes": 2571794,
+      "file": "2025\\1.广东省2025年高考分数段统计表.zip",
+      "kind": "zip",
+      "post_url": "https://eea.gd.gov.cn/zwgk_tjxx/content/post_4734449.html",
+      "sha256": "4ea71224f86c9843c60ce4f666762dcc1bb90ae48451db702bd8f434b2c9015a",
+      "subject_type": null,
+      "url": "https://eea.gd.gov.cn/attachment/0/583/583759/4734449.zip",
+      "year": 2025
+    },
+    "2025/历史": {
+      "bytes": 237137,
+      "file": "2025\\extracted\\1.广东省2025年高考普通类（历史）分数段统计表（含本、专科层次加分）.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/zwgk_tjxx/content/post_4734449.html",
+      "sha256": "d609f49cb9037bc360ef02902e88d3879a9e5199484cee38550e297d988f28f6",
+      "subject_type": "历史",
+      "url": "https://eea.gd.gov.cn/attachment/0/583/583759/4734449.zip#1.广东省2025年高考普通类（历史）分数段统计表（含本、专科层次加分）.pdf",
+      "year": 2025
+    },
+    "2025/物理": {
+      "bytes": 632317,
+      "file": "2025\\extracted\\2.广东省2025年高考普通类（物理）分数段统计表（含本、专科层次加分）.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/zwgk_tjxx/content/post_4734449.html",
+      "sha256": "424089628240c3d695c28f46d7ee737ed35884f8e32082dfefaca98d2bbe7a01",
+      "subject_type": "物理",
+      "url": "https://eea.gd.gov.cn/attachment/0/583/583759/4734449.zip#2.广东省2025年高考普通类（物理）分数段统计表（含本、专科层次加分）.pdf",
+      "year": 2025
+    },
+    "2026/历史": {
+      "bytes": 541569,
+      "file": "2026\\1.广东省2026年高考普通类（历史）分数段统计表（含本、专科层次加分）.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/tzgg/content/post_4916194.html",
+      "sha256": "3da4cef3ae6e85b8601f85184a906d4b3f7232c5a631f5678ff3b990e69a7219",
+      "subject_type": "历史",
+      "url": "https://eea.gd.gov.cn/attachment/0/618/618107/4916194.pdf",
+      "year": 2026
+    },
+    "2026/物理": {
+      "bytes": 550540,
+      "file": "2026\\2.广东省2026年高考普通类（物理）分数段统计表（含本、专科层次加分）.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/tzgg/content/post_4916194.html",
+      "sha256": "9bde2c4aaddf28cf3c294e2fdde3fa76981ae2ec4c6df39185d34d6d31044f9f",
+      "subject_type": "物理",
+      "url": "https://eea.gd.gov.cn/attachment/0/618/618126/4916194.pdf",
+      "year": 2026
+    },
+    "admission/2024/zip": {
+      "bytes": 2753736,
+      "file": "admission\\2024\\广东省2024年本科批次投档情况.zip",
+      "kind": "zip",
+      "post_url": "https://eea.gd.gov.cn/ptgk/content/post_4458330.html",
+      "sha256": "bff3dcdc9c101c24f02c94000ae340b3c6943ee1d411baf5a692831ab3cf5d49",
+      "subject_type": null,
+      "url": "https://eea.gd.gov.cn/attachment/0/554/554636/4458330.zip",
+      "year": 2024
+    },
+    "admission/2024/历史": {
+      "bytes": 747884,
+      "file": "admission\\2024\\extracted\\广东省2024年本科普通类（历史）投档情况.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/ptgk/content/post_4458330.html",
+      "sha256": "def10e50f5fac3635d06fb782de3a134efcd152a45c4e15f40d09da4a50c5be9",
+      "subject_type": "历史",
+      "url": "https://eea.gd.gov.cn/attachment/0/554/554636/4458330.zip#广东省2024年本科普通类（历史）投档情况.pdf",
+      "year": 2024
+    },
+    "admission/2024/物理": {
+      "bytes": 1360085,
+      "file": "admission\\2024\\extracted\\广东省2024年本科普通类（物理）投档情况.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/ptgk/content/post_4458330.html",
+      "sha256": "70ad455c8d884e0f65d0aa85ca03e67378eaa61375f58158f53c86d5f39413f6",
+      "subject_type": "物理",
+      "url": "https://eea.gd.gov.cn/attachment/0/554/554636/4458330.zip#广东省2024年本科普通类（物理）投档情况.pdf",
+      "year": 2024
+    },
+    "admission/2025/历史": {
+      "bytes": 431545,
+      "file": "admission\\2025\\广东省2025年本科普通类（历史）投档情况.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/ptgk/content/post_4746781.html",
+      "sha256": "ab814f4a274132f23919471419a3bb1cdcf89b257177b7a640f2865af55f18df",
+      "subject_type": "历史",
+      "url": "https://eea.gd.gov.cn/attachment/0/585/585885/4746781.pdf",
+      "year": 2025
+    },
+    "admission/2025/物理": {
+      "bytes": 753301,
+      "file": "admission\\2025\\广东省2025年本科普通类（物理）投档情况.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/ptgk/content/post_4746781.html",
+      "sha256": "2852813a5723c67d97925dc8ad3a897b4b37c3bc50fd58dfae758625f3daa7f0",
+      "subject_type": "物理",
+      "url": "https://eea.gd.gov.cn/attachment/0/585/585886/4746781.pdf",
+      "year": 2025
+    },
+    "admission/2026/历史": {
+      "bytes": 469518,
+      "file": "admission\\2026\\广东省2026年本科普通类（历史）投档情况.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/ptgk/content/post_4926622.html",
+      "sha256": "fa53a0e4bdc68004b7c04862e06bc21d12201ae255438cc928b7982b14805d36",
+      "subject_type": "历史",
+      "url": "https://eea.gd.gov.cn/attachment/0/620/620024/4926622.pdf",
+      "year": 2026
+    },
+    "admission/2026/物理": {
+      "bytes": 919150,
+      "file": "admission\\2026\\广东省2026年本科普通类（物理）投档情况.pdf",
+      "kind": "pdf",
+      "post_url": "https://eea.gd.gov.cn/ptgk/content/post_4926622.html",
+      "sha256": "1ff4ddc46100706cc584f843b003d3c5b5298fcd619c0f124bc570365747020a",
+      "subject_type": "物理",
+      "url": "https://eea.gd.gov.cn/attachment/0/620/620025/4926622.pdf",
+      "year": 2026
+    }
+  }
+}
